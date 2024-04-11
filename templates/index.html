@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie CRUD</title>
+</head>
+<body>
+    <h1>Movies</h1>
+    <ul id="movieList"></ul>
+
+    <h2>Add Movie</h2>
+    <form id="addMovieForm">
+        <label for="name">Name:</label>
+        <input type="text" id="addName" name="name" required><br>
+        <label for="year">Year:</label>
+        <input type="number" id="addYear" name="year" required><br>
+        <label for="category">Category:</label>
+        <input type="text" id="addCategory" name="category" required><br>
+        <button type="submit">Add Movie</button>
+    </form>
+
+    <h2>Edit Movie</h2>
+    <form id="editMovieForm" style="display: none;">
+        <input type="hidden" id="editMovieId" name="id">
+        <label for="name">Name:</label>
+        <input type="text" id="editName" name="name" required><br>
+        <label for="year">Year:</label>
+        <input type="number" id="editYear" name="year" required><br>
+        <label for="category">Category:</label>
+        <input type="text" id="editCategory" name="category" required><br>
+        <button type="submit">Save Changes</button>
+        <button type="button" id="cancelEdit">Cancel</button>
+    </form>
+
+    <script>
+
+        function AppendEditAndDeleteButton(li, movie)
+        {
+            // Add Edit button
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Edit';
+            editButton.onclick = function() {
+                document.getElementById('editMovieId').value = movie.id;
+                document.getElementById('editName').value = movie.name;
+                document.getElementById('editYear').value = movie.year;
+                document.getElementById('editCategory').value = movie.category;
+                document.getElementById('addMovieForm').style.display = 'none';
+                document.getElementById('editMovieForm').style.display = 'block';
+            };
+            li.appendChild(editButton);
+
+            // Add Delete button
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.onclick = function() {
+                fetch(`/movies/${movie.id}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        li.remove();
+                    }
+                });
+            };
+            li.appendChild(deleteButton);
+        }
+
+        // Function to create list item for a movie
+        function createMovieListItem(movie) {
+            const li = document.createElement('li');
+            li.setAttribute('data-id', movie.id);
+            li.textContent = `${movie.name} (${movie.year}) - ${movie.category}`;
+            
+            AppendEditAndDeleteButton(li, movie);
+
+            return li;
+        }
+
+        // Fetch movies and render them
+        function renderMovies() {
+            fetch('/movies')
+                .then(response => response.json())
+                .then(data => {
+                    const movieList = document.getElementById('movieList');
+                    movieList.innerHTML = '';
+                    data.forEach(movie => {
+                        const li = createMovieListItem(movie);
+                        movieList.appendChild(li);
+                    });
+                });
+        }
+
+        renderMovies();
+
+        // Add movie form submission
+        document.getElementById('addMovieForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            fetch('/movies', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(Object.fromEntries(formData))
+            })
+            .then(response => response.json())
+            .then(data => {
+                const movieList = document.getElementById('movieList');
+                const li = createMovieListItem(data);
+                movieList.appendChild(li);
+                this.reset();
+            });
+        });
+
+        // Edit movie form submission
+        document.getElementById('editMovieForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const movieId = formData.get('id');
+            fetch(`/movies/${movieId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: formData.get('id'),
+                    name: formData.get('name'),
+                    year: formData.get('year'),
+                    category: formData.get('category')
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const existingMovie = document.querySelector(`li[data-id="${movieId}"]`);
+                existingMovie.textContent = `${data.name} (${data.year}) - ${data.category}`;
+                
+                AppendEditAndDeleteButton(existingMovie, data);
+                this.reset();
+                // Show add form and hide edit form
+                document.getElementById('addMovieForm').style.display = 'block';
+                document.getElementById('editMovieForm').style.display = 'none';
+            });
+          
+        });
+
+        // Cancel edit button click
+        document.getElementById('cancelEdit').addEventListener('click', function() {
+            // Show add form and hide edit form
+            document.getElementById('addMovieForm').style.display = 'block';
+            document.getElementById('editMovieForm').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
