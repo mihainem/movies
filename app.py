@@ -5,13 +5,6 @@ import os
 
 app = Flask(__name__)
 
-# Sample data for movies
-# movies = [
-#     {"id": "1", "name": "Inception", "year": 2010, "category": "Science Fiction"},
-#     {"id": "2", "name": "The Shawshank Redemption", "year": 1994, "category": "Drama"},
-#     {"id": "3", "name": "The Dark Knight", "year": 2008, "category": "Action"},
-# ]
-
 # CRUD Operations
 
 # Get all movies
@@ -30,8 +23,6 @@ def get_movies():
 # Get a specific movie
 @app.route('/movies/<movie_id>', methods=['GET'])
 def get_movie(movie_id):
-    # movies = send_event_to_webhook("READ", {"id": movie_id})
-    # movie = next((movie for movie in movies if movie['id'] == movie_id), None)
     try:
         response = send_event_to_webhook("READ", {"id": movie_id})
         return jsonify(response.json())
