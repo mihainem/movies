@@ -40,33 +40,29 @@ def add_movie():
         "category": data['category']
     }
 
-    return send_event_to_webhook("CREATE", new_movie)
+    response = send_event_to_webhook("CREATE", new_movie)
+    return response.json()
 
 # Edit a movie
-@app.route('/movies/<movie_id>', methods=['PUT'])
+app.route('/movies/<movie_id>', methods=['PUT'])
 def update_movie(movie_id):
-    # movie = send_event_to_webhook("READ", {id: movie_id})
-    # movie = next((movie for movie in movies if movie['id'] == movie_id), None)
     try:
         data = request.json
-        # movie.update(data)
-        # send_event_to_webhook("UPDATE", data)
-        send_event_to_webhook("UPDATE", data) # jsonify(movie)
-    except: 
+        response = send_event_to_webhook("UPDATE", data)
+        return response.json()
+    except:
         return jsonify({"error": "Movie not found"}), 404
-
+    
 # Delete a movie
 @app.route('/movies/<movie_id>', methods=['DELETE'])
 def delete_movie(movie_id):
-    # global movies
-    # movies = [movie for movie in movies if movie['id'] != movie_id]
     send_event_to_webhook("DELETE", {"id": movie_id})
     return '', 204
 
 # Route to serve the HTML interface
 @app.route('/')
 def index():
-    return render_template('index.html', movies=send_event_to_webhook("READ", {id: ""}).json())
+    return render_template('index.html', movies=send_event_to_webhook("READ", {'id': ""}).json())
 
 def send_event_to_webhook(event_type, data):
     # Replace 'webhook_url' with the actual webhook URL
