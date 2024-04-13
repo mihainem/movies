@@ -84,6 +84,7 @@ def send_event_to_webhook(event_type, data):
         response = requests.post(webhook_url, headers=headers, json=payload)
         response.raise_for_status()
         print('Event sent successfully')
+        print('Response from webhook:', response.json()) 
         return response
     except requests.exceptions.RequestException as e:
         print('Failed to send event:', e)
