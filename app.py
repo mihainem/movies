@@ -20,7 +20,7 @@ def get_movies():
     return jsonify(movies)
 
 # Get a specific movie
-@app.route('/movies/<str:movie_id>', methods=['GET'])
+@app.route('/movies/<movie_id>', methods=['GET'])
 def get_movie(movie_id):
     movie = next((movie for movie in movies if movie['id'] == movie_id), None)
     if movie:
@@ -44,7 +44,7 @@ def add_movie():
     return jsonify(new_movie), 201
 
 # Edit a movie
-@app.route('/movies/<str:movie_id>', methods=['PUT'])
+@app.route('/movies/<movie_id>', methods=['PUT'])
 def update_movie(movie_id):
     movie = next((movie for movie in movies if movie['id'] == movie_id), None)
     if movie:
@@ -56,7 +56,7 @@ def update_movie(movie_id):
         return jsonify({"error": "Movie not found"}), 404
 
 # Delete a movie
-@app.route('/movies/<str:movie_id>', methods=['DELETE'])
+@app.route('/movies/<movie_id>', methods=['DELETE'])
 def delete_movie(movie_id):
     global movies
     movies = [movie for movie in movies if movie['id'] != movie_id]
