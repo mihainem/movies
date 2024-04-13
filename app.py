@@ -17,8 +17,15 @@ app = Flask(__name__)
 # Get all movies
 @app.route('/movies', methods=['GET'])
 def get_movies():
-    return send_event_to_webhook("READ", {"id": ""}).json()
-
+    try:
+        response = send_event_to_webhook("READ", {"id": ""})
+        if response.status_code == 200:
+            return jsonify(response.json())
+        else:
+            return jsonify({"error": "Failed to fetch movies"}), response.status_code
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
 # Get a specific movie
 @app.route('/movies/<movie_id>', methods=['GET'])
 def get_movie(movie_id):
@@ -62,7 +69,7 @@ def delete_movie(movie_id):
 # Route to serve the HTML interface
 @app.route('/')
 def index():
-    return render_template('index.html', movies=send_event_to_webhook("READ", {'id': ""}).json())
+    return render_template('index.html')
 
 def send_event_to_webhook(event_type, data):
     # Replace 'webhook_url' with the actual webhook URL
