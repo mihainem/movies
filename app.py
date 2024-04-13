@@ -53,14 +53,26 @@ def add_movie():
     return jsonify(response.json()), 201
 
 # Edit a movie
-app.route('/movies/<movie_id>', methods=['PUT'])
+@app.route('/movies', methods=['PUT'])
 def update_movie(movie_id):
     try:
         data = request.json
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
+
+        # Ensure the movie ID in the URL is the one being updated
+        data['id'] = movie_id
+
         response = send_event_to_webhook("UPDATE", data)
-        return jsonify(response.json()), 201
-    except:
-        return jsonify({"error": "Movie not found"}), 404
+        if response.status_code == 200:
+            return jsonify(response.json()), 200
+        else:
+            return jsonify({"error": "Failed to update movie"}), response.status_code
+
+    except requests.exceptions.RequestException as e:
+        print(f"Network or HTTP error occurred: {e}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
     
 # Delete a movie
 @app.route('/movies/<movie_id>', methods=['DELETE'])
