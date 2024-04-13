@@ -49,8 +49,8 @@ def add_movie():
         "category": data['category']
     }
 
-    response = send_event_to_webhook("CREATE", new_movie)
-    return jsonify(response.json()), 201
+    send_event_to_webhook("CREATE", new_movie)
+    return new_movie, 201
 
 # Edit a movie
 @app.route('/movies/<movie_id>', methods=['PUT'])
