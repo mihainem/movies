@@ -19,11 +19,13 @@ app = Flask(__name__)
 def get_movies():
     try:
         response = send_event_to_webhook("READ", {"id": ""})
-        
-        return jsonify(response.json())
-        
+        if response.ok:
+            return jsonify(response.json()[0])
+        else:
+            return jsonify({"error": "Failed to fetch movies"}), response.status_code
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
     
 # Get a specific movie
 @app.route('/movies/<movie_id>', methods=['GET'])
