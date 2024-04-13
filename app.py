@@ -1,14 +1,15 @@
 from flask import Flask, request, jsonify, render_template
 import uuid
 import requests
+import os
 
 app = Flask(__name__)
 
 # Sample data for movies
 movies = [
-    {"id": 1, "name": "Inception", "year": 2010, "category": "Science Fiction"},
-    {"id": 2, "name": "The Shawshank Redemption", "year": 1994, "category": "Drama"},
-    {"id": 3, "name": "The Dark Knight", "year": 2008, "category": "Action"},
+    {"id": "1", "name": "Inception", "year": 2010, "category": "Science Fiction"},
+    {"id": "2", "name": "The Shawshank Redemption", "year": 1994, "category": "Drama"},
+    {"id": "3", "name": "The Dark Knight", "year": 2008, "category": "Action"},
 ]
 
 # CRUD Operations
@@ -19,7 +20,7 @@ def get_movies():
     return jsonify(movies)
 
 # Get a specific movie
-@app.route('/movies/<int:movie_id>', methods=['GET'])
+@app.route('/movies/<str:movie_id>', methods=['GET'])
 def get_movie(movie_id):
     movie = next((movie for movie in movies if movie['id'] == movie_id), None)
     if movie:
@@ -43,7 +44,7 @@ def add_movie():
     return jsonify(new_movie), 201
 
 # Edit a movie
-@app.route('/movies/<int:movie_id>', methods=['PUT'])
+@app.route('/movies/<str:movie_id>', methods=['PUT'])
 def update_movie(movie_id):
     movie = next((movie for movie in movies if movie['id'] == movie_id), None)
     if movie:
@@ -55,7 +56,7 @@ def update_movie(movie_id):
         return jsonify({"error": "Movie not found"}), 404
 
 # Delete a movie
-@app.route('/movies/<int:movie_id>', methods=['DELETE'])
+@app.route('/movies/<str:movie_id>', methods=['DELETE'])
 def delete_movie(movie_id):
     global movies
     movies = [movie for movie in movies if movie['id'] != movie_id]
@@ -69,7 +70,7 @@ def index():
 
 def send_event_to_webhook(event_type, data):
     # Replace 'webhook_url' with the actual webhook URL
-    webhook_url = 'https://webapi.procesio.app/api/webhooks/launch/9646d551-e5ef-4a39-bd3d-14051d85b8b1'
+    webhook_url = os.environ['WEBHOOK']
     headers = {'Content-Type': 'application/json'}
     payload = {
         'event_type': event_type,
