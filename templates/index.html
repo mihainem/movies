@@ -78,25 +78,26 @@
             return li;
         }
 
+        
         // Function to fetch and render movies
         function renderMovies() {
             fetch('/movies')
-                .then(response => {
-                    console.log('Response:', response); // Print the entire response object
-                    return response.json(); // Parse the response body as JSON
-                })
-                .then(data => {
-                    console.log('Data:', data); // Print the parsed JSON data
-                    const movieList = document.getElementById('movieList');
-                    movieList.innerHTML = '';
-                    data.forEach(movie => {
-                        const li = document.createElement('li');
-                        li.textContent = `${movie.name} (${movie.year}) - ${movie.category}`;
-                        movieList.appendChild(li);
-                    });
-                })
-                .catch(error => console.error('Error fetching movies:', error));
+            .then(response => {
+                console.log('Response:', response); // Print the entire response object
+                return response.json(); // Parse the response body as JSON
+            })
+            .then(data => {
+                console.log('Data:', data); // Print the parsed JSON data
+                const movieList = document.getElementById('movieList');
+                movieList.innerHTML = '';
+                data.forEach(movie => {
+                    const li = createMovieListItem(movie);  // Use the function to create list items with buttons
+                    movieList.appendChild(li);
+                });
+            })
+            .catch(error => console.error('Error fetching movies:', error));
         }
+
 
         // Call renderMovies function when page loads
         document.addEventListener('DOMContentLoaded', renderMovies);
