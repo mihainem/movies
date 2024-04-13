@@ -32,7 +32,8 @@ def get_movie(movie_id):
     # movies = send_event_to_webhook("READ", {"id": movie_id})
     # movie = next((movie for movie in movies if movie['id'] == movie_id), None)
     try:
-        return send_event_to_webhook("READ", {"id": movie_id}).json()
+        response = send_event_to_webhook("READ", {"id": movie_id}).json()
+        return jsonify(response.json())
     except:
         return jsonify({"error": "Movie not found"}), 404
 
@@ -48,7 +49,7 @@ def add_movie():
     }
 
     response = send_event_to_webhook("CREATE", new_movie)
-    return response.json()
+    return jsonify(response.json()), 201
 
 # Edit a movie
 app.route('/movies/<movie_id>', methods=['PUT'])
@@ -56,7 +57,7 @@ def update_movie(movie_id):
     try:
         data = request.json
         response = send_event_to_webhook("UPDATE", data)
-        return response.json()
+        return jsonify(response.json()), 201
     except:
         return jsonify({"error": "Movie not found"}), 404
     
