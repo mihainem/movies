@@ -19,10 +19,9 @@ app = Flask(__name__)
 def get_movies():
     try:
         response = send_event_to_webhook("READ", {"id": ""})
-        if response.status_code == 200:
-            return jsonify(response.json())
-        else:
-            return jsonify({"error": "Failed to fetch movies"}), response.status_code
+        
+        return jsonify(response.json())
+        
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
@@ -32,7 +31,7 @@ def get_movie(movie_id):
     # movies = send_event_to_webhook("READ", {"id": movie_id})
     # movie = next((movie for movie in movies if movie['id'] == movie_id), None)
     try:
-        response = send_event_to_webhook("READ", {"id": movie_id}).json()
+        response = send_event_to_webhook("READ", {"id": movie_id})
         return jsonify(response.json())
     except:
         return jsonify({"error": "Movie not found"}), 404
