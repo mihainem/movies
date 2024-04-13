@@ -70,7 +70,7 @@ def index():
 
 def send_event_to_webhook(event_type, data):
     # Replace 'webhook_url' with the actual webhook URL
-    webhook_url = os.environ['WEBHOOK']
+    webhook_url = os.environ.get('WEBHOOK')
     headers = {'Content-Type': 'application/json'}
     payload = {
         'event_type': event_type,
