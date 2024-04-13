@@ -80,8 +80,12 @@
         // Function to fetch and render movies
         function renderMovies() {
             fetch('/movies')
-                .then(response => response.json())
+                .then(response => {
+                    console.log('Response:', response); // Print the entire response object
+                    return response.json(); // Parse the response body as JSON
+                })
                 .then(data => {
+                    console.log('Data:', data); // Print the parsed JSON data
                     const movieList = document.getElementById('movieList');
                     movieList.innerHTML = '';
                     data.forEach(movie => {
