@@ -142,7 +142,7 @@
             .then(response => response.json())
             .then(data => {
                 const existingMovie = document.querySelector(`li[data-id="${movieId}"]`);
-                existingMovie.textContent = `${data.name} (${data.year}) - ${data.category}`;
+                existingMovie.textContent = `${formData.get('name')} (${formData.get('year')}) - ${formData.get('category')}`;
                 
                 AppendEditAndDeleteButton(existingMovie, data);
                 this.reset();
