@@ -115,6 +115,12 @@
             })
             .then(response => response.json())
             .then(data => {
+                data = JSON.stringify({
+                    id: formData.get('id'),
+                    name: formData.get('name'),
+                    year: formData.get('year'),
+                    category: formData.get('category')
+                })
                 const movieList = document.getElementById('movieList');
                 const li = createMovieListItem(data);
                 movieList.appendChild(li);
