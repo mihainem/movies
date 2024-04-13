@@ -1,7 +1,10 @@
 ```markdown
 # Movie CRUD Application
 
-This repository contains a full-stack web application for managing movies. It includes a Flask API server with CRUD (Create, Read, Update, Delete) operations, a front-end interface for interacting with the API, and integration with Procesio for executing database operations.
+This repository contains a full-stack web application for managing movies.
+It includes a Flask API server with CRUD (Create, Read, Update, Delete) operations,
+a front-end interface for interacting with the API,
+and integration with Procesio for executing database operations.
 
 ## Features
 
@@ -48,7 +51,9 @@ To get this project up and running on your local machine, follow these steps:
 
 ## Usage
 
-Once the application is running, you can access the API at `http://localhost:5000/` and the front-end interface at the specified port. Use the web interface to add, edit, or delete movie entries.
+Once the application is running, you can access the API at `http://localhost:5000/` 
+and the front-end interface at the specified port. Use the web interface to add, edit,
+or delete movie entries.
 
 ## Contributing
 
