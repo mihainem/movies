@@ -17,16 +17,14 @@ movies = [
 # Get all movies
 @app.route('/movies', methods=['GET'])
 def get_movies():
-    send_event_to_webhook("READ", {"id": ""})
-    return jsonify(movies)
+    return send_event_to_webhook("READ", {"id": ""})
 
 # Get a specific movie
 @app.route('/movies/<movie_id>', methods=['GET'])
 def get_movie(movie_id):
     movie = next((movie for movie in movies if movie['id'] == movie_id), None)
     if movie:
-        send_event_to_webhook("READ", {"id": movie_id})
-        return jsonify(movie)
+        return send_event_to_webhook("READ", {"id": movie_id})
     else:
         return jsonify({"error": "Movie not found"}), 404
 
