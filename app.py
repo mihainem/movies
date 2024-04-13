@@ -53,7 +53,7 @@ def add_movie():
     return jsonify(response.json()), 201
 
 # Edit a movie
-@app.route('/movies', methods=['PUT'])
+@app.route('/movies/<movie_id>', methods=['PUT'])
 def update_movie(movie_id):
     try:
         data = request.json
