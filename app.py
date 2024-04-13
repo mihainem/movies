@@ -17,7 +17,7 @@ movies = [
 # Get all movies
 @app.route('/movies', methods=['GET'])
 def get_movies():
-    send_event_to_webhook("READ", {})
+    send_event_to_webhook("READ", {"id": ""})
     return jsonify(movies)
 
 # Get a specific movie
